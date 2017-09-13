@@ -37,23 +37,23 @@ from object_detection.utils import dataset_util
 from object_detection.utils import label_map_util
 
 
-flags = tf.app.flags
-flags.DEFINE_string('data_dir', '', 'Root directory to raw PASCAL VOC dataset.')
-flags.DEFINE_string('set', 'train', 'Convert training set, validation set or '
-                    'merged set.')
-flags.DEFINE_string('annotations_dir', 'Annotations',
-                    '(Relative) path to annotations directory.')
-flags.DEFINE_string('year', 'VOC2007', 'Desired challenge year.')
-flags.DEFINE_string('output_path', '', 'Path to output TFRecord')
-flags.DEFINE_string('label_map_path', 'data/pascal_label_map.pbtxt',
-                    'Path to label map proto')
-flags.DEFINE_boolean('ignore_difficult_instances', False, 'Whether to ignore '
-                     'difficult instances')
-FLAGS = flags.FLAGS
+# flags = tf.app.flags
+# flags.DEFINE_string('data_dir', '', 'Root directory to raw PASCAL VOC dataset.')
+# flags.DEFINE_string('set', 'train', 'Convert training set, validation set or '
+#                     'merged set.')
+# flags.DEFINE_string('annotations_dir', 'Annotations',
+#                     '(Relative) path to annotations directory.')
+# flags.DEFINE_string('year', 'VOC2007', 'Desired challenge year.')
+# flags.DEFINE_string('output_path', '', 'Path to output TFRecord')
+# flags.DEFINE_string('label_map_path', 'data/pascal_label_map.pbtxt',
+#                     'Path to label map proto')
+# flags.DEFINE_boolean('ignore_difficult_instances', False, 'Whether to ignore '
+#                      'difficult instances')
+# FLAGS = flags.FLAGS
 
 SETS = ['train', 'val', 'trainval', 'test']
 YEARS = ['VOC2007', 'VOC2012', 'merged']
-
+JPEG_DIR = '/Users/shleifer/voc_kitti/VOC2012/JPEGImages/'
 
 def dict_to_tf_example(data,
                        dataset_directory,
@@ -81,8 +81,11 @@ def dict_to_tf_example(data,
   Raises:
     ValueError: if the image pointed to by data['filename'] is not a valid JPEG
   """
+  data['filename'] = os.path.join(
+      data['filename'][:-4] + '.jpg')
   img_path = os.path.join(data['folder'], image_subdirectory, data['filename'])
   full_path = os.path.join(dataset_directory, img_path)
+  assert os.path.exists(full_path)
   with tf.gfile.GFile(full_path, 'rb') as fid:
     encoded_jpg = fid.read()
   encoded_jpg_io = io.BytesIO(encoded_jpg)
@@ -109,13 +112,12 @@ def dict_to_tf_example(data,
       continue
 
     difficult_obj.append(int(difficult))
-
     xmin.append(float(obj['bndbox']['xmin']) / width)
     ymin.append(float(obj['bndbox']['ymin']) / height)
     xmax.append(float(obj['bndbox']['xmax']) / width)
     ymax.append(float(obj['bndbox']['ymax']) / height)
-    classes_text.append(obj['name'].encode('utf8'))
-    classes.append(label_map_dict[obj['name']])
+    classes_text.append(obj['name'].lower().encode('utf8'))
+    classes.append(label_map_dict[obj['name'].lower()])
     truncated.append(int(obj['truncated']))
     poses.append(obj['pose'].encode('utf8'))
 

@@ -19,6 +19,10 @@ This file provides a generic training method that can be used to train a
 DetectionModel.
 """
 
+from __future__ import absolute_import
+from __future__ import division
+from __future__ import print_function
+
 import functools
 
 import tensorflow as tf
@@ -30,7 +34,7 @@ from object_detection.core import preprocessor
 from object_detection.core import standard_fields as fields
 from object_detection.utils import ops as util_ops
 from object_detection.utils import variables_helper
-from deployment import model_deploy
+from slim.deployment import model_deploy
 
 slim = tf.contrib.slim
 
@@ -155,7 +159,7 @@ def train(create_tensor_dict_fn, create_model_fn, train_config, master, task,
     is_chief: Whether this replica is the chief replica.
     train_dir: Directory to write checkpoints and training summaries to.
   """
-
+  print('CALLED TRAINER')
   detection_model = create_model_fn()
   data_augmentation_options = [
       preprocessor_builder.build(step)
