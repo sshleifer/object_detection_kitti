@@ -18,6 +18,23 @@ examples_path = '/Users/shleifer/voc_kitti/VOC2012/ImageSets/Main/trainval.txt'
 dataset_directory = 'data/'
 
 
+IMAGES_URL = 'http://kitti.is.tue.mpg.de/kitti/data_object_image_2.zip'
+LABELS_URL = 'http://kitti.is.tue.mpg.de/kitti/data_object_label_2.zip'
+# DET_LINK = 'http://kitti.is.tue.mpg.de/kitti/data_object_det_2.zip'
+
+
+def fetch_required_kitti_data():
+    raise NotImplementedError
+
+
+def convert_to_pascal_voc():
+    raise NotImplementedError
+
+
+def convert_to_jpg():
+    raise NotImplementedError
+
+
 def create_records(examples_path):
     labels = {}
     examples_list = dataset_util.read_examples_list(examples_path)

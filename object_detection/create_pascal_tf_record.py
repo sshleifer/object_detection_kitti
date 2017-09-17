@@ -82,7 +82,7 @@ def dict_to_tf_example(data,
     ValueError: if the image pointed to by data['filename'] is not a valid JPEG
   """
   data['filename'] = os.path.join(
-      data['filename'][:-4] + '.jpg')
+      data['filename'][:-4] + '.jpg')  # TODO(SS): Fix hack from when I created filename XML before converting
   img_path = os.path.join(data['folder'], image_subdirectory, data['filename'])
   full_path = os.path.join(dataset_directory, img_path)
   assert os.path.exists(full_path)
