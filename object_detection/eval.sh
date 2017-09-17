@@ -1,5 +1,5 @@
 #!/bin/bash
-export PYTHONPATH="..:./../slim"
+source tensorflow_env.sh
 python eval.py \
     --logtostderr \
     --checkpoint_dir=kitti_mobilenet/ \
