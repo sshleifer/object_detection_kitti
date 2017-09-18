@@ -1,10 +1,8 @@
+# /usr/bin/python
 from __future__ import print_function, division
 from object_detection.create_pascal_tf_record import dict_to_tf_example
 from object_detection.utils import dataset_util
 from object_detection.utils import label_map_util
-import hashlib
-import io
-import logging
 import numpy as np
 import os
 import glob
@@ -12,7 +10,7 @@ import glob
 from lxml import etree
 from  PIL import Image
 import tensorflow as tf
-import os.path as p
+import subprocess
 import shutil
 
 writer = tf.python_io.TFRecordWriter('data/train.tfrecord')
@@ -31,20 +29,10 @@ NUM_TRAIN = 100
 def strip_leading_zeroes(path):
     'training/image_2/00074.jpg -> training/image_2/74.jpg'
     end = path[-4:]
-    new_basename = '{}{}'.format(int(p.basename(path)[:-4]), end)
-    new_path = p.join(p.dirname(path), new_basename)
+    new_basename = '{}{}'.format(int(os.path.basename(path)[:-4]), end)
+    new_path = os.path.join(os.path.dirname(path), new_basename)
     shutil.move(path, new_path)
     return new_path
-
-
-
-def fetch_required_kitti_data():
-
-    raise NotImplementedError
-
-
-def convert_to_pascal_voc():
-    raise NotImplementedError
 
 
 def convert_to_jpg_and_save(png_path):
@@ -55,8 +43,9 @@ def convert_to_jpg_and_save(png_path):
     return new_path
 
 
-def strip_zeroes_and_convert_to_jpg(data_dir='~/kitti_data/training'):
+def strip_zeroes_and_convert_to_jpg(data_dir='kitti_data/training'):
     '''convert images to jpg, strip leading zeroes and write train.txt file'''
+    # TODO(SS): Split off valid and what about kitti_data/training
     data_dir = os.path.expanduser(data_dir)
     image_paths = glob.glob(os.path.join(data_dir, 'image_2', '*.png'))
     label_paths = glob.glob(os.path.join(data_dir, 'label_2', '*.txt'))
@@ -70,8 +59,9 @@ def strip_zeroes_and_convert_to_jpg(data_dir='~/kitti_data/training'):
     file_contents = ','.join([os.path.basename(x)[:-4]
                               for x in np.random.choice(new_img_paths, NUM_TRAIN)])
 
-    with open('~/kitti_data/train.txt', 'w') as f:
+    with open('kitti_data/train.txt', 'w+') as f:
         f.write(file_contents)
+
 
 def xml_to_dict(path):
     with tf.gfile.GFile(path, 'r') as fid:
@@ -96,12 +86,12 @@ def create_records(examples_path):
     writer.close()
     return labels  # to inspect a bit
 
+
 def do_kitti_ingest():
-    kitti_path = fetch_required_kitti_data()
-    convert_to_jpg(kitti_path)
-    pascal_path = convert_to_pascal_voc(kitti_path)
-    print ('writing to data/train.tfrecord')
-    create_records(pascal_path)
+    strip_zeroes_and_convert_to_jpg()
+    assert os.path.exists('vod_converter', 'Must git clone vod-converter')
+    subprocess.call("./convert_to_pascal_voc.sh", shell=True)
+    create_records('voc_kitti/')
 
 
 

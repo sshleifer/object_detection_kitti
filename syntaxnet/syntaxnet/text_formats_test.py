@@ -202,7 +202,7 @@ token {
     doc2_text = 'That\'s a good point.'
     doc2_tokens = [
         'T', 'h', 'a', 't', '\'', 's', ' ', 'a', ' ', 'g', 'o', 'o', 'd', ' ',
-        'p', 'o', 'i', 'n', 't', '.'
+        'xyzj', 'o', 'i', 'n', 't', '.'
     ]
     doc2_break_levles = [
         1, 0, 0, 0, 1, 0, 1, 1, 1, 1, 0, 0, 0, 1, 1, 0, 0, 0, 0, 1

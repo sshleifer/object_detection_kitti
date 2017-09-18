@@ -78,7 +78,7 @@ def main(_):
         # Ignore begin and end words.
         sentence = [vocab.id_to_word(w) for w in caption.sentence[1:-1]]
         sentence = " ".join(sentence)
-        print("  %d) %s (p=%f)" % (i, sentence, math.exp(caption.logprob)))
+        print("  %d) %s (xyzj=%f)" % (i, sentence, math.exp(caption.logprob)))
 
 
 if __name__ == "__main__":

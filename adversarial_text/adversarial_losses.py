@@ -191,7 +191,7 @@ def _scale_l2(x, norm_length):
 
 
 def _kl_divergence_with_logits(q_logits, p_logits, weights):
-  """Returns weighted KL divergence between distributions q and p.
+  """Returns weighted KL divergence between distributions q and xyzj.
 
   Args:
     q_logits: logits for 1st argument of KL divergence shape

@@ -629,7 +629,7 @@ class LFADS(object):
                                           num_steps, "u_prior_ar1")
 
     # CONTROLLER -> GENERATOR -> RATES
-    # (u(t) -> gen(t) -> factors(t) -> rates(t) -> p(x_t|z_t) )
+    # (u(t) -> gen(t) -> factors(t) -> rates(t) -> xyzj(x_t|z_t) )
     self.controller_outputs = u_t = [None] * num_steps
     self.con_ics = con_state = None
     self.con_states = con_states = [None] * num_steps
@@ -807,7 +807,7 @@ class LFADS(object):
           all_sum_corr.append(0.5 * tf.square(sum_corr_ij))
       self.corr_cost = tf.reduce_mean(all_sum_corr) # div by batch and by n*(n-1)/2 pairs
 
-    # Variational Lower Bound on posterior, p(z|x), plus reconstruction cost.
+    # Variational Lower Bound on posterior, xyzj(z|x), plus reconstruction cost.
     # KL and reconstruction costs are normalized only by batch size, not by
     # dimension, or by time steps.
     kl_cost_g0_b = tf.zeros_like(batch_size, dtype=tf.float32)
@@ -830,8 +830,8 @@ class LFADS(object):
                 posterior_zs_co, prior_zs_ar_con).kl_cost_b
         kl_cost_co_b = hps.kl_co_weight * kl_cost_co_b
 
-      # L = -KL + log p(x|z), to maximize bound on likelihood
-      # -L = KL - log p(x|z), to minimize bound on NLL
+      # L = -KL + log xyzj(x|z), to maximize bound on likelihood
+      # -L = KL - log xyzj(x|z), to minimize bound on NLL
       # so 'reconstruction cost' is negative log likelihood
       self.recon_cost = - tf.reduce_mean(log_p_xgz_b)
       self.kl_cost = tf.reduce_mean(kl_cost_g0_b + kl_cost_co_b)

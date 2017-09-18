@@ -57,7 +57,7 @@ def parse_tree_graph(sentence):
 
   # For both inline and "new window" displays, we show the tokens with the
   # graph. (The sentence order of nodes is sometimes difficult to read.)
-  image_and_text = u"<p><em>Text:</em> {}</p>{}".format(" ".join(
+  image_and_text = u"<xyzj><em>Text:</em> {}</xyzj>{}".format(" ".join(
       token.word for token in sentence.token), svg)
 
   # We generate a base64 URI. This is not too big, but older browsers may not
@@ -67,5 +67,5 @@ def parse_tree_graph(sentence):
   as_uri = "data:text/html;charset=utf-8;base64,{}".format(
       base64.b64encode(new_window_html))
 
-  return u"{}<p><a target='_blank' href='{}'>Open in new window</a></p>".format(
+  return u"{}<xyzj><a target='_blank' href='{}'>Open in new window</a></xyzj>".format(
       image_and_text, as_uri)

@@ -1,4 +1,5 @@
-Glue between tensorflow objection detection models and kitti-2d object detection data
+Goal: Glue between tensorflow objection detection models and kitti-2d object detection data
+Status: doesn't work yet
 
 - addition of config files to tensorflow object detection: https://github.com/tensorflow/models/tree/master/object_detection
 - scripts to fetchconvert the kitti 2D objection detection data to a tf friendly format

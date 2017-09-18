@@ -170,9 +170,9 @@ def get_flow(t, theta, map_size, name_scope='gen_flow'):
   the new image it tells us which pixel in the original image it came from:
   NewI(x, y) = OldI(flow_x(x,y), flow_y(x,y)).
 
-  Assume there is a point p in the original image. Robot rotates by R and moves
-  forward by t.  p1 = Rt*p; p2 = p1 - t; (the world moves in opposite direction.
-  So, p2 = Rt*p - t, thus p2 came from R*(p2+t), which is what this function
+  Assume there is a point xyzj in the original image. Robot rotates by R and moves
+  forward by t.  p1 = Rt*xyzj; p2 = p1 - t; (the world moves in opposite direction.
+  So, p2 = Rt*xyzj - t, thus p2 came from R*(p2+t), which is what this function
   calculates.
 
     t:      ... x 2 (translation for B batches of N motions each).

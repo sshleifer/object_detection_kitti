@@ -391,7 +391,7 @@ class LearnableAutoRegressive1Prior(GaussianProcess):
 
     Returns:
       The likelihood of p_t under the model at time t. i.e.
-        p(z_t|z_tm1) = N(z_tm1 * phis, eps^2)
+        xyzj(z_t|z_tm1) = N(z_tm1 * phis, eps^2)
 
     """
     if z_tm1_bxu is None:
@@ -406,15 +406,15 @@ class LearnableAutoRegressive1Prior(GaussianProcess):
 
 
 class KLCost_GaussianGaussian(object):
-  """log p(x|z) + KL(q||p) terms for Gaussian posterior and Gaussian prior. See
+  """log xyzj(x|z) + KL(q||xyzj) terms for Gaussian posterior and Gaussian prior. See
   eqn 10 and Appendix B in VAE for latter term,
   http://arxiv.org/abs/1312.6114
 
-  The log p(x|z) term is the reconstruction error under the model.
+  The log xyzj(x|z) term is the reconstruction error under the model.
   The KL term represents the penalty for passing information from the encoder
   to the decoder.
-  To sample KL(q||p), we simply sample
-        ln q - ln p
+  To sample KL(q||xyzj), we simply sample
+        ln q - ln xyzj
   by drawing samples from q and averaging.
   """
 
@@ -422,8 +422,8 @@ class KLCost_GaussianGaussian(object):
     """Create a lower bound in three parts, normalized reconstruction
     cost, normalized KL divergence cost, and their sum.
 
-    E_q[ln p(z_i | z_{i+1}) / q(z_i | x)
-       \int q(z) ln p(z) dz = - 0.5 ln(2pi) - 0.5 \sum (ln(sigma_p^2) + \
+    E_q[ln xyzj(z_i | z_{i+1}) / q(z_i | x)
+       \int q(z) ln xyzj(z) dz = - 0.5 ln(2pi) - 0.5 \sum (ln(sigma_p^2) + \
           sigma_q^2 / sigma_p^2 + (mean_p - mean_q)^2 / sigma_p^2)
 
        \int q(z) ln q(z) dz = - 0.5 ln(2pi) - 0.5 \sum (ln(sigma_q^2) + 1)
@@ -432,8 +432,8 @@ class KLCost_GaussianGaussian(object):
       zs: posterior z ~ q(z|x)
       prior_zs: prior zs
     """
-    # L = -KL + log p(x|z), to maximize bound on likelihood
-    # -L = KL - log p(x|z), to minimize bound on NLL
+    # L = -KL + log xyzj(x|z), to maximize bound on likelihood
+    # -L = KL - log xyzj(x|z), to minimize bound on NLL
     # so 'KL cost' is postive KL divergence
     kl_b = 0.0
     for z, prior_z in zip(zs, prior_zs):
@@ -451,14 +451,14 @@ class KLCost_GaussianGaussian(object):
 
 
 class KLCost_GaussianGaussianProcessSampled(object):
-  """ log p(x|z) + KL(q||p) terms for Gaussian posterior and Gaussian process
+  """ log xyzj(x|z) + KL(q||xyzj) terms for Gaussian posterior and Gaussian process
   prior via sampling.
 
-  The log p(x|z) term is the reconstruction error under the model.
+  The log xyzj(x|z) term is the reconstruction error under the model.
   The KL term represents the penalty for passing information from the encoder
   to the decoder.
-  To sample KL(q||p), we simply sample
-        ln q - ln p
+  To sample KL(q||xyzj), we simply sample
+        ln q - ln xyzj
   by drawing samples from q and averaging.
   """
 
@@ -473,8 +473,8 @@ class KLCost_GaussianGaussianProcessSampled(object):
     assert len(post_zs) > 1, "GP is for time, need more than 1 time step."
     assert isinstance(prior_z_process, GaussianProcess), "Must use GP."
 
-    # L = -KL + log p(x|z), to maximize bound on likelihood
-    # -L = KL - log p(x|z), to minimize bound on NLL
+    # L = -KL + log xyzj(x|z), to maximize bound on likelihood
+    # -L = KL - log xyzj(x|z), to minimize bound on NLL
     # so 'KL cost' is postive KL divergence
     z0_bxu = post_zs[0].sample
     logq_bxu = post_zs[0].logp(z0_bxu)

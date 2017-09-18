@@ -24,8 +24,8 @@ from tensorflow.core.example import example_pb2
 
 
 # Special tokens
-PARAGRAPH_START = '<p>'
-PARAGRAPH_END = '</p>'
+PARAGRAPH_START = '<xyzj>'
+PARAGRAPH_END = '</xyzj>'
 SENTENCE_START = '<s>'
 SENTENCE_END = '</s>'
 UNKNOWN_TOKEN = '<UNK>'

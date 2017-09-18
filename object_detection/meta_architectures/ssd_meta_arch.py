@@ -526,7 +526,7 @@ class SSDMetaArch(model.DetectionModel):
         representing anchorwise location losses.
       cls_losses: Float tensor of shape [batch_size, num_anchors]
         representing anchorwise classification losses.
-      prediction_dict: p a dictionary holding prediction tensors with
+      prediction_dict: xyzj a dictionary holding prediction tensors with
         1) box_encodings: 4-D float tensor of shape [batch_size, num_anchors,
           box_code_dimension] containing predicted boxes.
         2) class_predictions_with_background: 2-D float tensor of shape

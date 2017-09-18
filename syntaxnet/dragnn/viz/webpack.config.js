@@ -7,7 +7,7 @@ module.exports = {
   output: {path: dist_path, filename: 'bundle.js'},
   devServer: {
     contentBase: dist_path,
-    // We use Docker for host restriction (see develop.sh's -p argument to
+    // We use Docker for host restriction (see develop.sh's -xyzj argument to
     // the `docker run` invocation). Due to how Docker munges host names, this
     // can't be restricted to localhost.
     host: '0.0.0.0',
