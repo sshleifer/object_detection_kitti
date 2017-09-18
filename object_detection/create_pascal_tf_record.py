@@ -53,7 +53,6 @@ from object_detection.utils import label_map_util
 
 SETS = ['train', 'val', 'trainval', 'test']
 YEARS = ['VOC2007', 'VOC2012', 'merged']
-JPEG_DIR = '/Users/shleifer/voc_kitti/VOC2012/JPEGImages/'
 
 def dict_to_tf_example(data,
                        dataset_directory,
@@ -81,11 +80,10 @@ def dict_to_tf_example(data,
   Raises:
     ValueError: if the image pointed to by data['filename'] is not a valid JPEG
   """
-  data['filename'] = os.path.join(
-      data['filename'][:-4] + '.jpg')  # TODO(SS): Fix hack from when I created filename XML before converting
+  # TODO(SS): loop over sets
   img_path = os.path.join(data['folder'], image_subdirectory, data['filename'])
   full_path = os.path.join(dataset_directory, img_path)
-  assert os.path.exists(full_path)
+  assert os.path.exists(full_path), full_path
   with tf.gfile.GFile(full_path, 'rb') as fid:
     encoded_jpg = fid.read()
   encoded_jpg_io = io.BytesIO(encoded_jpg)
