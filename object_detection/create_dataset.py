@@ -60,14 +60,14 @@ def get_labels_path(id, data_dir='kitti_data'):
     return os.path.join(data_dir, 'training', 'label_2', '{}.txt'.format(id))
 
 
-def split_validation_images(data_dir, jpg_paths):
+def split_validation_images(data_dir):
     # TODO: make this work with pascal_converter
-    image_paths = glob.glob(os.path.join(data_dir, '*', 'image_2', '*.png'))
+    image_paths = glob.glob(os.path.join(data_dir, '*', 'image_2', '*.jpg'))
     valid_label_dir = os.path.join(data_dir, 'valid', 'label_2')
     valid_image_dir = os.path.join(data_dir, 'valid', 'image_2')
     make_directory_if_not_there(valid_image_dir)
     make_directory_if_not_there(valid_label_dir)
-    train_paths = np.random.choice(jpg_paths, NUM_TRAIN)
+    train_paths = np.random.choice(image_paths, NUM_TRAIN)
     train_ids = []; valid_ids = []
     for path in image_paths:
         id = get_id(path)
@@ -96,11 +96,9 @@ def strip_zeroes_and_convert_to_jpg(data_dir='kitti_data'):
     image_paths = glob.glob(os.path.join(data_dir, '*', 'image_2', '*.png'))
     label_paths = glob.glob(os.path.join(data_dir, '*', 'label_2', '*.txt'))
     # TODO(SS): there are no testing labels
-    new_img_paths = []
     for path in tqdm(image_paths):
         stripped_path = strip_leading_zeroes(path)
         jpg_path = convert_to_jpg_and_save(stripped_path)
-        new_img_paths.append(jpg_path)
     for path in label_paths:
         strip_leading_zeroes(path)
 
@@ -137,6 +135,7 @@ import click
 def do_kitti_ingest(to_path):
     strip_zeroes_and_convert_to_jpg()
     assert os.path.exists('vod-converter'), 'Must git clone vod-converter'
+    split_validation_images()
     subprocess.call("./vod_convert.sh", shell=True)
     create_records(to_path=to_path)
 
