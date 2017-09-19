@@ -31,7 +31,7 @@ INGESTORS = {
 
 EGESTORS = {
     'voc': voc.VOCEgestor(),
-    'kitti': kitti.KITTIEgestor(),
+    # 'kitti': kitti.KITTIEgestor(),
     'tensorflow': tf_record.TensorflowEgestor(),
 }
 
@@ -87,7 +87,6 @@ def parse_args():
         '--train_ids',
         help="file containing list of image ids to move",
         required=False,
-        action='store_true',
         default=None,
     )
 

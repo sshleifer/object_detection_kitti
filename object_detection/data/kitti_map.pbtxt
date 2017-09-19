@@ -20,7 +20,7 @@ item {
 
 item {
   id: 5
-  name: 'person'
+  name: 'person_sitting'
 }
 
 item {

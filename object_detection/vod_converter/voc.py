@@ -82,28 +82,16 @@ class VOCIngestor(Ingestor):
 class VOCEgestor(Egestor):
 
     def expected_labels(self):
-        return {
-            'aeroplane': [],
-            'bicycle': [],
-            'bird': [],
-            'boat': [],
-            'bottle': [],
-            'bus': [],
-            'car': [],
-            'cat': [],
-            'chair': [],
-            'cow': [],
-            'diningtable': [],
-            'dog': [],
-            'horse': [],
-            'motorbike': [],
-            'person': ['pedestrian'],
-            'pottedplant': [],
-            'sheep': [],
-            'sofa': [],
-            'train': [],
-            'tvmonitor': []
-        }
+        '''label -> aliases map'''
+        return {'car': [],
+                 'cyclist': [],
+                 'dontcare': [],
+                 'misc': [],
+                 'pedestrian': ['person'],
+                 'person_sitting': [],
+                 'tram': [],
+                 'truck': [],
+                 'van': []}
 
     def egest(self, image_detections, root):
         image_sets_path = "%s/VOC2012/ImageSets/Main" % root
@@ -149,7 +137,7 @@ class VOCEgestor(Egestor):
 
             for detection in image_detection['detections']:
                 x_object = add_sub_node(xml_root, 'object', {
-                    'name': detection['label'],
+                    'name': detection['label'].lower(),
                     'difficult': 0,
                     'occluded': 0,
                     'truncated': 0,

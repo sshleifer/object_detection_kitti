@@ -54,24 +54,20 @@ class KITTIIngestor(Ingestor):
         for subdir in expected_dirs:
             if not os.path.isdir("%s/%s" % (path, subdir)):
                 return False, "Expected subdirectory %s within %s" % (subdir, path)
-        if not os.path.isfile("%s/train.txt" % (path)):
-            return False, "Expected train.txt file within %s" % (path)
         return True, None
 
     def ingest(self, path, train_ids):
-        self.train_id_path = train_ids
-        if self.train_id_path is None:
-            self.train_id_path = "%s/train.txt" % (path)
+        self.train_id_path = train_ids or "{}/train.txt".format(path)
         image_ids = self._get_image_ids()
-        image_ext = 'png'
         if len(image_ids):
             first_image_id = image_ids[0]
             image_ext = self.find_image_ext(path, first_image_id)
-        return [self._get_image_detection(path, image_name, image_ext=image_ext)
+        else:
+            raise ValueError('could not find images')
+        return [self._get_image_detection(path, image_name, image_ext)
                 for image_name in image_ids]
 
     def find_image_ext(self, root, image_id):
-
         for image_ext in ['png', 'jpg']:
             if os.path.exists("%s/training/image_2/%s.%s" % (root, image_id, image_ext)):
                 return image_ext
@@ -81,9 +77,10 @@ class KITTIIngestor(Ingestor):
         with open(self.train_id_path) as f:
             return f.read().strip().split(',')
 
-    def _get_image_detection(self, root, image_id, image_ext='png'):
+    def _get_image_detection(self, root, image_id, image_ext):
         detections_fpath = "%s/training/label_2/%s.txt" % (root, image_id)
         detections = self._get_detections(detections_fpath)
+        self.unfiltered_detections = detections
         detections = [det for det in detections if det['left'] < det['right'] and det['top'] < det['bottom']]
         image_path = "%s/training/image_2/%s.%s" % (root, image_id, image_ext)
         image_width, image_height = _image_dimensions(image_path)
@@ -103,7 +100,6 @@ class KITTIIngestor(Ingestor):
         with open(detections_fpath) as f:
             f_csv = csv.reader(f, delimiter=' ')
             for row in f_csv:
-
                 x1, y1, x2, y2 = map(float, row[4:8])
                 label, truncated, occluded, alpha= row[:4]
                 detections.append({
@@ -111,10 +107,10 @@ class KITTIIngestor(Ingestor):
                     'occluded': occluded,
                     'truncated': truncated,
                     'alpha': alpha,
-                    'left': max(0.0, x1),
-                    'right': min(1023, x2),
-                    'top': max(0.0, y1),
-                    'bottom': min(511, y2)
+                    'left': x1,
+                    'right': x2,
+                    'top': y1,
+                    'bottom': y2,
                 })
         return detections
 
@@ -138,9 +134,9 @@ class KITTIEgestor(Egestor):
     def expected_labels(self):
         return {
             'Car': [],
-            'Cyclist': ['biker'],
+            'Cyclist': [],
             'Misc': [],
-            'Pedestrian': ['person'],
+            'Pedestrian': [],
             'Person_sitting': [],
             'Tram': [],
             'Truck': [],
