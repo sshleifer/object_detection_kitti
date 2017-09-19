@@ -27,15 +27,14 @@ from __future__ import print_function
 import hashlib
 import io
 import logging
-import os
 
-from lxml import etree
 import PIL.Image
+import os
 import tensorflow as tf
+from lxml import etree
 
 from object_detection.utils import dataset_util
 from object_detection.utils import label_map_util
-
 
 # flags = tf.app.flags
 # flags.DEFINE_string('data_dir', '', 'Root directory to raw PASCAL VOC dataset.')

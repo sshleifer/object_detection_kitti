@@ -3,6 +3,7 @@ source tensorflow_env.sh
 python vod-converter/vod_converter/main.py \
     --from kitti --from-path kitti_data  \
     --to voc --to-path voc_kitti
+    #--to tensorflow --to-path data
 
 
 # Cloning instructions in README

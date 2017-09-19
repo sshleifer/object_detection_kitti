@@ -1,20 +1,22 @@
 # /usr/bin/python
 from __future__ import print_function, division
+
+import glob
+import shutil
+import subprocess
+
+import numpy as np
+import os
+import tensorflow as tf
+from  PIL import Image
+from lxml import etree
+from tqdm import tqdm
+
 from object_detection.create_pascal_tf_record import dict_to_tf_example
 from object_detection.utils import dataset_util
 from object_detection.utils import label_map_util
-import numpy as np
-import os
-import glob
 
-from lxml import etree
-from  PIL import Image
-import tensorflow as tf
-from tqdm import tqdm
-import subprocess
-import shutil
 
-writer = tf.python_io.TFRecordWriter('data/train.tfrecord')
 label_map_dict = label_map_util.get_label_map_dict('data/kitti_map.pbtxt')
 annotations_dir = 'voc_kitti/VOC2012/Annotations/'
 DEFAULT_EXAMPLES_PATH = 'voc_kitti/VOC2012/ImageSets/Main/trainval.txt'
@@ -110,9 +112,11 @@ def xml_to_dict(path):
     return dataset_util.recursive_parse_xml_to_dict(xml)['annotation']
 
 
-def create_records(examples_path=DEFAULT_EXAMPLES_PATH):
+def create_records(examples_path=DEFAULT_EXAMPLES_PATH, to_path='data/train.tfrecord'):
+    writer = tf.python_io.TFRecordWriter(to_path)
     labels = {}
     examples_list = dataset_util.read_examples_list(examples_path)
+    assert len(examples_list) > 0, examples_path
     for i, example in enumerate(examples_list):
         # TODO(SS): why is first example screwed up?
         path = os.path.join(annotations_dir, example + '.xml')
@@ -127,12 +131,14 @@ def create_records(examples_path=DEFAULT_EXAMPLES_PATH):
     return labels  # to inspect a bit
 
 
-def do_kitti_ingest():
+import click
+@click.command()
+@click.option('--to-path', default='data/train.tfrecord')
+def do_kitti_ingest(to_path):
     strip_zeroes_and_convert_to_jpg()
-    assert os.path.exists('vod_converter', 'Must git clone vod-converter')
-    subprocess.call("./convert_to_pascal_voc.sh", shell=True)
-    create_records('voc_kitti/')
-
+    assert os.path.exists('vod-converter'), 'Must git clone vod-converter'
+    subprocess.call("./vod_convert.sh", shell=True)
+    create_records(to_path=to_path)
 
 
 if __name__ == '__main__':

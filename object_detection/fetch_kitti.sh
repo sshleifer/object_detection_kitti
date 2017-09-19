@@ -9,7 +9,7 @@ mkdir kitti_data
 mv training kitti_data
 mv testing kitti_data
 python create_dataset.py
-
+#./train.sh
 #mkdir kitti_data/training
 #mkdir kitti_data/testing
 #mv data_object_image_2 kitti_data
