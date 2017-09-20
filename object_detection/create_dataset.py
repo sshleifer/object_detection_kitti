@@ -131,9 +131,7 @@ def create_records(data_dir, to_path='data/train.tfrecord'):
         # TODO(SS): why is first example screwed up?
         path = os.path.join(annotations_dir, example + '.xml')
         data = xml_to_dict(path)
-        if 'object' not in data:
-            import ipdb;
-            ipdb.set_trace()
+        assert 'object' in data:
         
         labels[i] = [k['name'] for k in data['object']]
         try:
@@ -141,7 +139,7 @@ def create_records(data_dir, to_path='data/train.tfrecord'):
                                         data_dir,
                                         label_map_dict)
         except Exception as e:
-            import ipdb; ipdb.set_trace()
+            raise
         writer.write(tf_example.SerializeToString())
     writer.close()
     return labels  # to inspect a bit
