@@ -58,27 +58,34 @@ def get_labels_path(id, data_dir='kitti_data'):
     return os.path.join(data_dir, 'training', 'label_2', '{}.txt'.format(id))
 
 
+def get_image_path(id, data_dir='kitti_data'):
+    return os.path.join(data_dir, 'training', 'image_2', '{}.jpg'.format(id))
+
+
 def split_validation_images(data_dir='kitti_data', num_train=5, num_consider=120):
     '''make valid.txt and train.txt and create valid subtree'''
-    image_paths = glob.glob(os.path.join(data_dir, '*', 'image_2', '*.jpg'))[:num_consider]
+    label_paths = glob.glob(os.path.join(data_dir, '*', 'label_2', '*.txt'))[:num_consider]
     valid_label_dir = os.path.join(data_dir, 'valid', 'label_2')
     valid_image_dir = os.path.join(data_dir, 'valid', 'image_2')
     make_directory_if_not_there(valid_image_dir)
     make_directory_if_not_there(valid_label_dir)
 
-    train_paths = np.random.choice(image_paths, num_train)
-    train_ids = []; valid_ids = []
-    for path in image_paths:
-        id = get_id(path)
-        labels_path = get_labels_path(id, data_dir)
-        assert os.path.exists(labels_path), labels_path
+    train_paths = np.random.choice(label_paths, num_train)
+    train_ids = []
+    valid_ids = []
+    for label_path in label_paths:
+        id = get_id(label_path)
+        image_path = get_image_path(id, data_dir)
+        if not os.path.exists(image_path):
+            print('no path {}'.format(image_path))
+            continue
 
-        if path in train_paths:
+        if label_path in train_paths:
             train_ids.append(id)
         else:
             valid_ids.append(id)
-            shutil.copy(path, valid_image_dir)
-            shutil.copy(get_labels_path(id), valid_label_dir)
+            shutil.copy(label_path, valid_label_dir)
+            shutil.copy(image_path, valid_image_dir)
 
     assert len(valid_ids) > 0
     make_directory_if_not_there(os.path.join(data_dir, 'valid', 'label_2'))
@@ -135,10 +142,11 @@ def create_records(data_dir, to_path='data/train.tfrecord'):
 import click
 @click.command()
 @click.option('--to-path', default='data/train.tfrecord')
-def do_kitti_ingest(to_path):
-    strip_zeroes_and_convert_to_jpg()
+@click.option('--data-dir', default='kitti_data')
+def do_kitti_ingest(to_path, data_dir):
+    strip_zeroes_and_convert_to_jpg(data_dir=data_dir)
     assert os.path.exists('vod_converter'), 'Must git clone vod-converter'
-    split_validation_images()
+    split_validation_images(data_dir=data_dir)
 
     subprocess.call("./vod_convert.sh", shell=True)
     create_records('voc_kitti', to_path=to_path)
