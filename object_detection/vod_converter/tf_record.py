@@ -5,7 +5,7 @@ import PIL.Image
 import os
 import tensorflow as tf
 
-from object_detection.create_dataset import label_map_dict
+
 from object_detection.utils import dataset_util
 
 
@@ -46,6 +46,7 @@ def kitti_dict_to_tf_example(data):
     truncated = []
     poses = []
     difficult_obj = []
+    from object_detection.create_dataset import label_map_dict
     for obj in data['detections']:
         difficult_obj.append(obj.get('difficult', False))  # TODO(SS): not being parsed
         truncated.append(0)  # not parsed

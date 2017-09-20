@@ -1,7 +1,7 @@
 import unittest
 
-from utils.kitti import show_groundtruth, get_annotations
-from kitti_to_voc import kitti_to_voc
+from object_detection.utils.kitti import show_groundtruth, get_annotations
+from object_detection.kitti_to_voc import kitti_to_voc
 
 IMAGE_PATH = 'kitti_data/training/image_2/2456.jpg'
 IMAGE_VOC_PATH= 'voc_kitti/VOC2012/JPEGImages/2456.jpg'

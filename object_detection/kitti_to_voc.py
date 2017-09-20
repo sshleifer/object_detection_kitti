@@ -1,7 +1,7 @@
-from vod_converter.kitti import KITTIIngestor
-from vod_converter.voc import VOCEgestor
-from vod_converter.tf_record import TensorflowEgestor
-from vod_converter.converter import convert
+from object_detection.vod_converter.kitti import KITTIIngestor
+from object_detection.vod_converter.voc import VOCEgestor
+from object_detection.vod_converter.tf_record import TensorflowEgestor
+from object_detection.vod_converter.converter import convert
 
 def kitti_to_voc(from_path, to_path, train_id_path, select_only_known_labels=False,
                  filter_images_without_labels=False):

@@ -37,7 +37,7 @@ import os
 from PIL import Image
 import shutil
 
-from converter import Ingestor, Egestor
+from object_detection.vod_converter.converter import Ingestor, Egestor
 
 def pad_with_zeroes(img_id):
     return "%06d" % (int(img_id),)

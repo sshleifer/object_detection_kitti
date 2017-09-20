@@ -12,6 +12,7 @@ from  PIL import Image
 from lxml import etree
 from tqdm import tqdm
 
+from object_detection.kitti_to_voc import kitti_to_voc
 from object_detection.create_pascal_tf_record import dict_to_tf_example
 from object_detection.utils import dataset_util
 from object_detection.utils import label_map_util

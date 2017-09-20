@@ -8,7 +8,7 @@ import xml.etree.ElementTree as ET
 
 import os
 
-from converter import Ingestor, Egestor
+from object_detection.vod_converter.converter import Ingestor, Egestor
 
 
 class VOCIngestor(Ingestor):
