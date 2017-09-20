@@ -20,14 +20,6 @@ from object_detection.utils import label_map_util
 label_map_dict = label_map_util.get_label_map_dict('data/kitti_map.pbtxt')
 
 
-
-
-IMAGES_URL = 'http://kitti.is.tue.mpg.de/kitti/data_object_image_2.zip'
-LABELS_URL = 'http://kitti.is.tue.mpg.de/kitti/data_object_label_2.zip'
-NUM_TRAIN = 5
-NUM_CONSIDER = 120
-# DET_LINK = 'http://kitti.is.tue.mpg.de/kitti/data_object_det_2.zip'
-
 def get_fun_paths(base_voc_dir):
     annotations_dir = '{}/VOC2012/Annotations/'.format(base_voc_dir)
     examples_path = '{}/VOC2012/ImageSets/Main/trainval.txt'.format(base_voc_dir)
@@ -35,7 +27,7 @@ def get_fun_paths(base_voc_dir):
 
 
 def strip_leading_zeroes(path):
-    'training/image_2/00074.jpg -> training/image_2/74.jpg'
+    '''training/image_2/00074.jpg -> training/image_2/74.jpg'''
     end = path[-4:]
     new_basename = '{}{}'.format(int(os.path.basename(path)[:-4]), end)
     new_path = os.path.join(os.path.dirname(path), new_basename)
@@ -45,6 +37,7 @@ def strip_leading_zeroes(path):
 
 
 def convert_to_jpg_and_save(png_path):
+    # TODO(SS): faster version?
     im = Image.open(png_path)
     rgb_im = im.convert('RGB')
     new_path = '{}.jpg'.format(png_path[:-4])
@@ -56,7 +49,6 @@ def get_id(path):
     return os.path.basename(path)[:-4]
 
 
-
 def make_directory_if_not_there(path):
     '''makes a directory if not there'''
     if not os.path.exists(path):
@@ -66,21 +58,20 @@ def get_labels_path(id, data_dir='kitti_data'):
     return os.path.join(data_dir, 'training', 'label_2', '{}.txt'.format(id))
 
 
-def split_validation_images(data_dir='kitti_data'):
-    # TODO: make this work with pascal_converter
-    image_paths = glob.glob(os.path.join(data_dir, '*', 'image_2', '*.jpg'))[:NUM_CONSIDER]
+def split_validation_images(data_dir='kitti_data', num_train=5, num_consider=120):
+    '''make valid.txt and train.txt and create valid subtree'''
+    image_paths = glob.glob(os.path.join(data_dir, '*', 'image_2', '*.jpg'))[:num_consider]
     valid_label_dir = os.path.join(data_dir, 'valid', 'label_2')
     valid_image_dir = os.path.join(data_dir, 'valid', 'image_2')
     make_directory_if_not_there(valid_image_dir)
     make_directory_if_not_there(valid_label_dir)
 
-    train_paths = np.random.choice(image_paths, NUM_TRAIN)
+    train_paths = np.random.choice(image_paths, num_train)
     train_ids = []; valid_ids = []
     for path in image_paths:
         id = get_id(path)
-        labels_path = get_labels_path(id)
-        if not os.path.exists(labels_path): # TODO(SS): fix this!
-            continue
+        labels_path = get_labels_path(id, data_dir)
+        assert os.path.exists(labels_path), labels_path
 
         if path in train_paths:
             train_ids.append(id)
@@ -89,16 +80,14 @@ def split_validation_images(data_dir='kitti_data'):
             shutil.copy(path, valid_image_dir)
             shutil.copy(get_labels_path(id), valid_label_dir)
 
-    train_file_contents = ','.join(train_ids)
-    valid_file_contents = ','.join(valid_ids)
     assert len(valid_ids) > 0
     make_directory_if_not_there(os.path.join(data_dir, 'valid', 'label_2'))
-
-    #
-    # with open('kitti_data/train.txt', 'w+') as f:
-    #     f.write(train_file_contents)
-    # with open('kitti_data/valid.txt', 'w+') as f:
-    #     f.write(valid_file_contents)
+    train_file_contents = ','.join(train_ids)
+    valid_file_contents = ','.join(valid_ids)
+    with open('kitti_data/train.txt', 'w+') as f:
+        f.write(train_file_contents)
+    with open('kitti_data/valid.txt', 'w+') as f:
+         f.write(valid_file_contents)
 
 
 def strip_zeroes_and_convert_to_jpg(data_dir='kitti_data'):
