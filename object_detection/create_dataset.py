@@ -1,15 +1,15 @@
 # /usr/bin/python
 from __future__ import print_function, division
 
+import click
 import glob
-import shutil
-import subprocess
-
+from lxml import etree
 import numpy as np
 import os
+from PIL import Image
+import shutil
+import subprocess
 import tensorflow as tf
-from  PIL import Image
-from lxml import etree
 from tqdm import tqdm
 
 from object_detection.kitti_to_voc import kitti_to_voc
@@ -19,7 +19,11 @@ from object_detection.utils import label_map_util
 
 
 label_map_dict = label_map_util.get_label_map_dict('data/kitti_map.pbtxt')
-
+DEFAULT_DATA_DIR = 'kitti_data'
+VOC_TRAIN_DIR = 'voc_kitti'
+VOC_VALID_DIR = 'voc_kitti_valid'
+TRAIN_RECORD_PATH = 'data/train.tfrecord'
+VALID_RECORD_PATH = 'data/valid.tfrecord'
 
 def get_fun_paths(base_voc_dir):
     annotations_dir = '{}/VOC2012/Annotations/'.format(base_voc_dir)
@@ -55,15 +59,15 @@ def make_directory_if_not_there(path):
     if not os.path.exists(path):
         os.makedirs(path)
 
-def get_labels_path(id, data_dir='kitti_data'):
+def get_labels_path(id, data_dir=DEFAULT_DATA_DIR):
     return os.path.join(data_dir, 'training', 'label_2', '{}.txt'.format(id))
 
 
-def get_image_path(id, data_dir='kitti_data'):
+def get_image_path(id, data_dir):
     return os.path.join(data_dir, 'training', 'image_2', '{}.jpg'.format(id))
 
 
-def split_validation_images(data_dir='kitti_data', num_train=5, num_consider=120):
+def split_validation_images(data_dir, num_train=5, num_consider=120):
     '''make valid.txt and train.txt and create valid subtree'''
     label_paths = glob.glob(os.path.join(data_dir, '*', 'label_2', '*.txt'))[:num_consider]
     valid_label_dir = os.path.join(data_dir, 'valid', 'label_2')
@@ -95,10 +99,10 @@ def split_validation_images(data_dir='kitti_data', num_train=5, num_consider=120
     with open('kitti_data/train.txt', 'w+') as f:
         f.write(train_file_contents)
     with open('kitti_data/valid.txt', 'w+') as f:
-         f.write(valid_file_contents)
+        f.write(valid_file_contents)
 
 
-def strip_zeroes_and_convert_to_jpg(data_dir='kitti_data'):
+def strip_zeroes_and_convert_to_jpg(data_dir):
     '''convert images to jpg, strip leading zeroes and write train.txt file'''
     # TODO(SS): Split off valid and what about kitti_data/training
     data_dir = os.path.expanduser(data_dir)
@@ -130,29 +134,30 @@ def create_records(data_dir, to_path='data/train.tfrecord'):
         assert 'object' in data, data['filename']
         labels[i] = [k['name'] for k in data['object']]
         try:
-            tf_example = dict_to_tf_example(data,
-                                        data_dir,
-                                        label_map_dict)
-        except Exception as e:
+            tf_example = dict_to_tf_example(data, data_dir, label_map_dict)
+        except Exception as e: #TODO(SS): remove me
+            print(e)
             import pdb; pdb.set_trace()
         writer.write(tf_example.SerializeToString())
     writer.close()
     return labels  # to inspect a bit
 
 
-import click
+
 @click.command()
-@click.option('--to-path', default='data/train.tfrecord')
-@click.option('--data-dir', default='kitti_data')
+@click.option('--to-path', default=TRAIN_RECORD_PATH)
+@click.option('--data-dir', default=DEFAULT_DATA_DIR)
 def do_kitti_ingest(to_path, data_dir):
-    strip_zeroes_and_convert_to_jpg(data_dir=data_dir)
+    strip_zeroes_and_convert_to_jpg(data_dir)
     assert os.path.exists('vod_converter'), 'Must git clone vod-converter'
-    split_validation_images(data_dir=data_dir)
+    split_validation_images(data_dir)
 
     subprocess.call("./vod_convert.sh", shell=True)
-    create_records('voc_kitti', to_path=to_path)
-    create_records('voc_kitti_valid', to_path='data/valid.tfrecord')
-
+    kitti_to_voc(data_dir, VOC_TRAIN_DIR, os.path.join(data_dir, 'train.txt'))
+    kitti_to_voc(data_dir, VOC_VALID_DIR, os.path.join(data_dir, 'valid.txt'))
+    create_records(VOC_TRAIN_DIR, to_path=to_path)
+    create_records(VOC_VALID_DIR, to_path=VALID_RECORD_PATH)
+    print('succesfully wrote {} and {}'.format(to_path, VALID_RECORD_PATH))
 
 if __name__ == '__main__':
     do_kitti_ingest()
