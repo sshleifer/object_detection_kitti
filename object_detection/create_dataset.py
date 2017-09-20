@@ -67,9 +67,16 @@ def get_image_path(id, data_dir):
     return os.path.join(data_dir, 'training', 'image_2', '{}.jpg'.format(id))
 
 
-def split_validation_images(data_dir, num_train=5, num_consider=120):
+def split_validation_images(data_dir, pct_train=0.9, num_consider='all'):
     '''make valid.txt and train.txt and create valid subtree'''
-    label_paths = glob.glob(os.path.join(data_dir, '*', 'label_2', '*.txt'))[:num_consider]
+    label_paths = glob.glob(os.path.join(data_dir, '*', 'label_2', '*.txt'))
+    if isinstance(num_consider, int):
+        label_paths = label_paths[:num_consider]
+    else:
+        num_consider = len(label_paths)
+    assert len(label_paths) > 0
+    num_train = int(np.floor(num_consider * pct_train))
+
     valid_label_dir = os.path.join(data_dir, 'valid', 'label_2')
     valid_image_dir = os.path.join(data_dir, 'valid', 'image_2')
     make_directory_if_not_there(valid_image_dir)
@@ -151,8 +158,6 @@ def do_kitti_ingest(to_path, data_dir):
     strip_zeroes_and_convert_to_jpg(data_dir)
     assert os.path.exists('vod_converter'), 'Must git clone vod-converter'
     split_validation_images(data_dir)
-
-    subprocess.call("./vod_convert.sh", shell=True)
     kitti_to_voc(data_dir, VOC_TRAIN_DIR, os.path.join(data_dir, 'train.txt'))
     kitti_to_voc(data_dir, VOC_VALID_DIR, os.path.join(data_dir, 'valid.txt'))
     create_records(VOC_TRAIN_DIR, to_path=to_path)

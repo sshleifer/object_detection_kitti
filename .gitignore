@@ -4,3 +4,4 @@ protos
 *.DS_Store
 *.idea
 *.pyc
+object_detection/data/*
