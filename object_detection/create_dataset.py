@@ -128,18 +128,16 @@ def create_records(data_dir, to_path='data/train.tfrecord'):
     examples_list = dataset_util.read_examples_list(examples_path)
     assert len(examples_list) > 0, examples_path
     for i, example in enumerate(examples_list):
-        # TODO(SS): why is first example screwed up?
         path = os.path.join(annotations_dir, example + '.xml')
         data = xml_to_dict(path)
-        assert 'object' in data:
-        
+        assert 'object' in data, data['filename']
         labels[i] = [k['name'] for k in data['object']]
         try:
             tf_example = dict_to_tf_example(data,
                                         data_dir,
                                         label_map_dict)
         except Exception as e:
-            raise
+            import pdb; pdb.set_trace()
         writer.write(tf_example.SerializeToString())
     writer.close()
     return labels  # to inspect a bit
