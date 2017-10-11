@@ -4,4 +4,16 @@ protos
 *.DS_Store
 *.idea
 *.pyc
+*.tar.gz
 object_detection/data/*
+object_detection/faster_rcnn_inception_resnet_v2_atrous_coco_11_06_2017/
+object_detection/kitti_atrous/
+object_detection/kitti_atrous_frozen/
+object_detection/kitti_atrous_overfit/
+object_detection/kitti_data/
+object_detection/kitti_eval/
+object_detection/kitti_frozen/
+object_detection/kitti_mobilenet/
+object_detection/ssd_mobilenet_v1_coco_11_06_2017/
+object_detection/voc_kitti/
+object_detection/voc_kitti_valid/
