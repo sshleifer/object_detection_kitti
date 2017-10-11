@@ -22,6 +22,75 @@ def box_to_matrix(data):
         float(box['xmax']) / max_width
     ] for box in boxes])
 
+def matrix_to_box(box):
+    coords = ['xmin', 'xmax', 'ymin', 'ymax']
+    return dict(zip(coords, box))
+
+
+def get_boxes_scores_classes(image_np, sess, detection_graph):
+    image_np_expanded = np.expand_dims(image_np, axis=0)
+    image_tensor = detection_graph.get_tensor_by_name('image_tensor:0')
+
+    # Each box represents a part of the image where a particular object was detected.
+    boxes = detection_graph.get_tensor_by_name('detection_boxes:0')
+
+    # Each score represent how level of confidence for each of the objects.
+    # Score is shown on the result immage, together with the class label.
+    scores = detection_graph.get_tensor_by_name('detection_scores:0')
+    classes = detection_graph.get_tensor_by_name('detection_classes:0')
+    num_detections = detection_graph.get_tensor_by_name('num_detections:0')
+
+    # Actual detection.
+    (boxes, scores, classes, num_detections) = sess.run(
+        [boxes, scores, classes, num_detections],
+        feed_dict={image_tensor: image_np_expanded})
+    return boxes, scores, classes, num_detections
+
+reverse_category = {
+    'car': 1,
+    'cyclist': 6,
+    'dontcare': 9,
+    'misc': 8,
+    'pedestrian': 4,
+    'person_sitting': 5,
+    'tram': 7,
+    'truck': 3,
+    'van': 2
+}
+
+
+def create_results_list(paths, sess, detection_graph):
+    detection_boxes = []
+    detection_scores = []
+    detection_classes = []
+    image_id = []
+    groundtruth_boxes = []
+    groundtruth_classes = []
+    for image_path in paths:
+        data = get_annotations(image_path)
+        image = Image.open(image_path)
+        image_np = load_image_into_numpy_array(image)
+        boxes, scores, classes, num_detections = get_boxes_scores_classes(image_np, sess, detection_graph)
+        boxes = np.squeeze(boxes)
+        classes = np.squeeze(classes)
+        scores = np.squeeze(scores)
+        # append to lists
+        detection_boxes.append(boxes)
+        detection_scores.append(scores)
+        detection_classes.append(classes)
+        image_id.append(data['filename'][:-4])
+        groundtruth_boxes.append(box_to_matrix(data))
+        groundtruth_classes.append(
+            np.array([reverse_category[x['name']] for x in data['object']])
+        )
+    return dict(image_id=image_id,
+                detection_boxes=detection_boxes,
+                detection_classes=detection_classes,
+                groundtruth_boxes=groundtruth_boxes,
+                groundtruth_classes=groundtruth_classes,
+                detection_scores=detection_scores
+                )
+
 
 def show_groundtruth(image_path):
     data = get_annotations(image_path)

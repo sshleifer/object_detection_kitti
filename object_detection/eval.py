@@ -76,6 +76,9 @@ flags.DEFINE_string('input_config_path', '',
 flags.DEFINE_string('model_config_path', '',
                     'Path to a model_pb2.DetectionModel config file.')
 
+# flags.DEFINE_string('gpudev','',
+#                     'Select a GPU Device.')
+
 FLAGS = flags.FLAGS
 
 
