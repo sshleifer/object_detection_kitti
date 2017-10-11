@@ -1,8 +1,8 @@
 #!/bin/bash
 source tensorflow_env.sh
-#export PYTHONPATH="..:./../slim"
+export PYTHONPATH="..:./../slim"
 export PIPELINE_CONFIG_PATH=samples/configs/ssd_mobilenet_v1_kitti.config
-export TRAIN_PATH=kitti_mobilenet/model.ckpt-5\
+
 
 python export_inference_graph.py \
     --input_type image_tensor \
