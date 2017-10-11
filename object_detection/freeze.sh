@@ -1,14 +1,14 @@
 #!/bin/bash
 source tensorflow_env.sh
-export PYTHONPATH="..:./../slim"
-export PIPELINE_CONFIG_PATH=samples/configs/ssd_mobilenet_v1_kitti.config
-
+export PIPELINE_CONFIG_PATH=$1
+export TRAIN_PATH=$2
+export OUTPUT_DIR=$3
 
 python export_inference_graph.py \
     --input_type image_tensor \
     --pipeline_config_path ${PIPELINE_CONFIG_PATH} \
     --trained_checkpoint_prefix ${TRAIN_PATH} \
-    --output_directory kitti_frozen/
+    --output_directory ${OUTPUT_DIR}
 
 
 # Exporting a trained model for inference

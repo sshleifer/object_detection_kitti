@@ -69,7 +69,7 @@ def get_image_path(id, data_dir):
 
 def split_validation_images(data_dir, pct_train=0.9, num_consider='all'):
     '''make valid.txt and train.txt and create valid subtree'''
-    label_paths = glob.glob(os.path.join(data_dir, '*', 'label_2', '*.txt'))
+    label_paths = glob.glob(os.path.join(data_dir, 'training', 'label_2', '*.txt'))
     if isinstance(num_consider, int):
         label_paths = label_paths[:num_consider]
     else:
@@ -82,7 +82,7 @@ def split_validation_images(data_dir, pct_train=0.9, num_consider='all'):
     make_directory_if_not_there(valid_image_dir)
     make_directory_if_not_there(valid_label_dir)
 
-    train_paths = np.random.choice(label_paths, num_train)
+    train_paths = np.random.choice(label_paths, num_train, replace=False)
     train_ids = []
     valid_ids = []
     for label_path in label_paths:
@@ -96,8 +96,8 @@ def split_validation_images(data_dir, pct_train=0.9, num_consider='all'):
             train_ids.append(id)
         else:
             valid_ids.append(id)
-            shutil.copy(label_path, valid_label_dir)
-            shutil.copy(image_path, valid_image_dir)
+            shutil.move(label_path, valid_label_dir)
+            shutil.move(image_path, valid_image_dir)
 
     assert len(valid_ids) > 0
     make_directory_if_not_there(os.path.join(data_dir, 'valid', 'label_2'))
@@ -111,11 +111,11 @@ def split_validation_images(data_dir, pct_train=0.9, num_consider='all'):
 
 def strip_zeroes_and_convert_to_jpg(data_dir):
     '''convert images to jpg, strip leading zeroes and write train.txt file'''
-    # TODO(SS): Split off valid and what about kitti_data/training
     data_dir = os.path.expanduser(data_dir)
-    image_paths = glob.glob(os.path.join(data_dir, '*', 'image_2', '*.png'))
-    label_paths = glob.glob(os.path.join(data_dir, '*', 'label_2', '*.txt'))
+    image_paths = glob.glob(os.path.join(data_dir, 'training', 'image_2', '*.png'))
+    label_paths = glob.glob(os.path.join(data_dir, 'training', 'label_2', '*.txt'))
     for path in tqdm(image_paths):
+        print(path)
         stripped_path = strip_leading_zeroes(path)
         convert_to_jpg_and_save(stripped_path)
     for path in label_paths:
@@ -155,11 +155,13 @@ def create_records(data_dir, to_path='data/train.tfrecord'):
 @click.option('--to-path', default=TRAIN_RECORD_PATH)
 @click.option('--data-dir', default=DEFAULT_DATA_DIR)
 def do_kitti_ingest(to_path, data_dir):
-    strip_zeroes_and_convert_to_jpg(data_dir)
+    # strip_zeroes_and_convert_to_jpg(data_dir)
     assert os.path.exists('vod_converter'), 'Must git clone vod-converter'
-    split_validation_images(data_dir)
-    kitti_to_voc(data_dir, VOC_TRAIN_DIR, os.path.join(data_dir, 'train.txt'))
-    kitti_to_voc(data_dir, VOC_VALID_DIR, os.path.join(data_dir, 'valid.txt'))
+    # split_validation_images(data_dir)
+    kitti_to_voc(os.path.join(data_dir, 'training'),
+                 VOC_TRAIN_DIR, os.path.join(data_dir, 'train.txt'))
+    kitti_to_voc(os.path.join(data_dir, 'valid'),
+                 VOC_VALID_DIR, os.path.join(data_dir, 'valid.txt'))
     create_records(VOC_TRAIN_DIR, to_path=to_path)
     create_records(VOC_VALID_DIR, to_path=VALID_RECORD_PATH)
     print('succesfully wrote {} and {}'.format(to_path, VALID_RECORD_PATH))

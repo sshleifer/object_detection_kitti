@@ -1,0 +1,4 @@
+cuda/
+data/*.tfrecord
+tmp_data/
+data/

@@ -48,8 +48,8 @@ class KITTIIngestor(Ingestor):
     def validate(self, path):
 
         expected_dirs = [
-            'training/image_2',
-            'training/label_2'
+            'image_2',
+            'label_2'
         ]
         for subdir in expected_dirs:
             if not os.path.isdir("%s/%s" % (path, subdir)):
@@ -69,20 +69,20 @@ class KITTIIngestor(Ingestor):
 
     def find_image_ext(self, root, image_id):
         for image_ext in ['png', 'jpg']:
-            if os.path.exists("%s/training/image_2/%s.%s" % (root, image_id, image_ext)):
+            if os.path.exists("%s/image_2/%s.%s" % (root, image_id, image_ext)):
                 return image_ext
-        raise Exception("could not find jpg or png for %s at %s/training/image_2" % (image_id, root))
+        raise Exception("could not find jpg or png for %s at %s/image_2" % (image_id, root))
 
     def _get_image_ids(self):
         with open(self.train_id_path) as f:
             return f.read().strip().split(',')
 
     def _get_image_detection(self, root, image_id, image_ext):
-        detections_fpath = "%s/training/label_2/%s.txt" % (root, image_id)
+        detections_fpath = "%s/label_2/%s.txt" % (root, image_id)
         detections = self._get_detections(detections_fpath)
         self.unfiltered_detections = detections
         detections = [det for det in detections if det['left'] < det['right'] and det['top'] < det['bottom']]
-        image_path = "%s/training/image_2/%s.%s" % (root, image_id, image_ext)
+        image_path = "%s/image_2/%s.%s" % (root, image_id, image_ext)
         image_width, image_height = _image_dimensions(image_path)
         return {
             'image': {
