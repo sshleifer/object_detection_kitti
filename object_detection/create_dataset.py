@@ -158,6 +158,8 @@ def do_kitti_ingest(to_path, data_dir):
     # strip_zeroes_and_convert_to_jpg(data_dir)
     assert os.path.exists('vod_converter'), 'Must git clone vod-converter'
     # split_validation_images(data_dir)
+    assert not os.path.exists(VOC_TRAIN_DIR)
+    assert not os.path.exists(VOC_VALID_DIR)
     kitti_to_voc(os.path.join(data_dir, 'training'),
                  VOC_TRAIN_DIR, os.path.join(data_dir, 'train.txt'))
     kitti_to_voc(os.path.join(data_dir, 'valid'),

@@ -39,3 +39,18 @@ false positives for 'Car' or 'Sitting Person' as false positive for 'Pedestrian'
 due to their similarity in appearance. As evaluation criterion we follow
 PASCAL and require the intersection-over-union of bounding boxes to be
 larger than 50% for an object to be detected correctly.
+
+
+Overfit Results
+=============================
+
+PerformanceByCategory/mAP@0.5IOU/car               0.937117
+PerformanceByCategory/mAP@0.5IOU/cyclist           0.828984
+PerformanceByCategory/mAP@0.5IOU/dontcare          0.364170
+PerformanceByCategory/mAP@0.5IOU/misc              0.800000
+PerformanceByCategory/mAP@0.5IOU/pedestrian        0.766581
+PerformanceByCategory/mAP@0.5IOU/person_sitting    0.875000
+PerformanceByCategory/mAP@0.5IOU/tram              1.000000
+PerformanceByCategory/mAP@0.5IOU/truck             0.914141
+PerformanceByCategory/mAP@0.5IOU/van               0.878044
+Precision/mAP@0.5IOU                               0.818226
