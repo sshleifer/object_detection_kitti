@@ -6,6 +6,7 @@ import glob
 from lxml import etree
 import numpy as np
 import os
+import pandas as pd
 from PIL import Image
 import shutil
 import subprocess
@@ -149,6 +150,14 @@ def create_records(data_dir, to_path='data/train.tfrecord'):
     writer.close()
     return labels  # to inspect a bit
 
+def glob_base(pat):
+    return list(map(os.path.basename, glob.glob(pat)))
+
+
+def assert_non_overlap_and_len():
+    valid_ids = glob_base(VOC_VALID_DIR + '/VOC2012/JPEGImages/*.jpg')
+    train_ids = glob_base(VOC_TRAIN_DIR+ '/VOC2012/JPEGImages/*.jpg')
+    assert len(pd.Index(valid_ids).intersection(train_ids)) == 0
 
 
 @click.command()
@@ -166,6 +175,7 @@ def do_kitti_ingest(to_path, data_dir):
                  VOC_VALID_DIR, os.path.join(data_dir, 'valid.txt'))
     create_records(VOC_TRAIN_DIR, to_path=to_path)
     create_records(VOC_VALID_DIR, to_path=VALID_RECORD_PATH)
+    assert_non_overlap_and_len()
     print('succesfully wrote {} and {}'.format(to_path, VALID_RECORD_PATH))
 
 if __name__ == '__main__':
