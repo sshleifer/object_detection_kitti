@@ -68,3 +68,17 @@ PerformanceByCategory/mAP@0.5IOU/tram              0.961799
 PerformanceByCategory/mAP@0.5IOU/truck             0.975472
 PerformanceByCategory/mAP@0.5IOU/van               0.950256
 Precision/mAP@0.5IOU                               0.817614
+
+Valid Results (794 valid images)
+================================
+
+PerformanceByCategory/mAP@0.5IOU/car               0.959948
+PerformanceByCategory/mAP@0.5IOU/cyclist           0.846211
+PerformanceByCategory/mAP@0.5IOU/dontcare          0.339320
+PerformanceByCategory/mAP@0.5IOU/misc              0.844625
+PerformanceByCategory/mAP@0.5IOU/pedestrian        0.792805
+PerformanceByCategory/mAP@0.5IOU/person_sitting    0.670089
+PerformanceByCategory/mAP@0.5IOU/tram              0.940657
+PerformanceByCategory/mAP@0.5IOU/truck             0.943405
+PerformanceByCategory/mAP@0.5IOU/van               0.936856
+Precision/mAP@0.5IOU                               0.808213

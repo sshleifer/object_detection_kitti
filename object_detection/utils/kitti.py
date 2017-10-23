@@ -93,20 +93,31 @@ def create_results_list(paths, sess, detection_graph):
 
 
 def show_groundtruth(image_path):
-    data = get_annotations(image_path)
+    '''Draw bboxes from annotations file on an image'''
     image = Image.open(image_path)
     image_np = load_image_into_numpy_array(image)
+
+    data = get_annotations(image_path)
     classes = np.array([name_to_id[x['name'].lower()]
                         for x in data['object']])
     scores = np.ones(len(data['object']))
+    if classes.ndim != 1:
+        classes = np.squeeze(classes).astype(np.int32)
+    if scores.ndim != 1:
+        scores = np.squeeze(scores).astype(np.int32)
+
+
+
+    np.squeeze(classes).astype(np.int32),
+    np.squeeze(scores)
     box_mat = box_to_matrix(data)
     print(box_mat.shape)
     # [ 0.01188183  0.          0.98302406  0.94844353]
     visualize_boxes_and_labels_on_image_array(
         image_np,
         box_mat,
-        np.squeeze(classes).astype(np.int32),
-        np.squeeze(scores),
+        classes,
+        scores,
         category_index,
         use_normalized_coordinates=True,
         line_thickness=8)
