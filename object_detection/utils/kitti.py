@@ -105,14 +105,7 @@ def show_groundtruth(image_path):
         classes = np.squeeze(classes).astype(np.int32)
     if scores.ndim != 1:
         scores = np.squeeze(scores).astype(np.int32)
-
-
-
-    np.squeeze(classes).astype(np.int32),
-    np.squeeze(scores)
     box_mat = box_to_matrix(data)
-    print(box_mat.shape)
-    # [ 0.01188183  0.          0.98302406  0.94844353]
     visualize_boxes_and_labels_on_image_array(
         image_np,
         box_mat,
