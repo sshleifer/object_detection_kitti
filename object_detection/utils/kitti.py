@@ -124,3 +124,19 @@ def get_annotations(image_path):
     '{}.xml'.format(img_id)
     )
     return xml_to_dict(annotation_path)
+
+
+def visualize_predictions(image_np, sess, detection_graph):
+    # Expand dimensions since the model expects images to have shape: [1, None, None, 3]
+    boxes, scores, classes, num_detections = get_boxes_scores_classes(image_np, sess, detection_graph)
+    print(boxes[0][0])
+    # Visualization of the results of a detection.
+    visualize_boxes_and_labels_on_image_array(
+        image_np,
+        np.squeeze(boxes),
+        np.squeeze(classes).astype(np.int32),
+        np.squeeze(scores),
+        category_index,
+        use_normalized_coordinates=True,
+        line_thickness=8)
+    return image_np

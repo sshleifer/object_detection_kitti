@@ -55,20 +55,6 @@ PerformanceByCategory/mAP@0.5IOU/truck             0.914141
 PerformanceByCategory/mAP@0.5IOU/van               0.878044
 Precision/mAP@0.5IOU                               0.818226
 
-Valid Results (320 valid images)
-================================
-
-PerformanceByCategory/mAP@0.5IOU/car               0.962958
-PerformanceByCategory/mAP@0.5IOU/cyclist           0.848411
-PerformanceByCategory/mAP@0.5IOU/dontcare          0.351580
-PerformanceByCategory/mAP@0.5IOU/misc              0.813007
-PerformanceByCategory/mAP@0.5IOU/pedestrian        0.800924
-PerformanceByCategory/mAP@0.5IOU/person_sitting    0.694118
-PerformanceByCategory/mAP@0.5IOU/tram              0.961799
-PerformanceByCategory/mAP@0.5IOU/truck             0.975472
-PerformanceByCategory/mAP@0.5IOU/van               0.950256
-Precision/mAP@0.5IOU                               0.817614
-
 Valid Results (794 valid images)
 ================================
 
@@ -82,3 +68,18 @@ PerformanceByCategory/mAP@0.5IOU/tram              0.940657
 PerformanceByCategory/mAP@0.5IOU/truck             0.943405
 PerformanceByCategory/mAP@0.5IOU/van               0.936856
 Precision/mAP@0.5IOU                               0.808213
+
+
+
+SSD Mobilenet Valid Results
+===========================
+PerformanceByCategory/mAP@0.5IOU/car               0.723661
+PerformanceByCategory/mAP@0.5IOU/cyclist           0.390498
+PerformanceByCategory/mAP@0.5IOU/dontcare          0.073786
+PerformanceByCategory/mAP@0.5IOU/misc              0.493499
+PerformanceByCategory/mAP@0.5IOU/pedestrian        0.257245
+PerformanceByCategory/mAP@0.5IOU/person_sitting    0.573592
+PerformanceByCategory/mAP@0.5IOU/tram              0.800318
+PerformanceByCategory/mAP@0.5IOU/truck             0.641025
+PerformanceByCategory/mAP@0.5IOU/van               0.579114
+Precision/mAP@0.5IOU                               0.503638
