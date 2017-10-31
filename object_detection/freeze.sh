@@ -3,6 +3,7 @@ source tensorflow_env.sh
 export PIPELINE_CONFIG_PATH=$1
 export TRAIN_PATH=$2
 export OUTPUT_DIR=$3
+mkdir -p ${OUTPUT_DIR}
 
 python export_inference_graph.py \
     --input_type image_tensor \

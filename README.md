@@ -1,5 +1,5 @@
 Goal: Glue between tensorflow objection detection models and kitti-2d object detection data
-Status: doesn't work yet
+Status: sort of works
 
 - addition of config files to 
 - scripts to fetchconvert the kitti 2D objection detection data to a tf friendly format
@@ -70,16 +70,25 @@ PerformanceByCategory/mAP@0.5IOU/van               0.936856
 Precision/mAP@0.5IOU                               0.808213
 
 
-
 SSD Mobilenet Valid Results
 ===========================
-PerformanceByCategory/mAP@0.5IOU/car               0.723661
-PerformanceByCategory/mAP@0.5IOU/cyclist           0.390498
-PerformanceByCategory/mAP@0.5IOU/dontcare          0.073786
-PerformanceByCategory/mAP@0.5IOU/misc              0.493499
-PerformanceByCategory/mAP@0.5IOU/pedestrian        0.257245
-PerformanceByCategory/mAP@0.5IOU/person_sitting    0.573592
-PerformanceByCategory/mAP@0.5IOU/tram              0.800318
-PerformanceByCategory/mAP@0.5IOU/truck             0.641025
-PerformanceByCategory/mAP@0.5IOU/van               0.579114
-Precision/mAP@0.5IOU                               0.503638
+Category          mAP@0.5IOU
+
+car               0.723661
+cyclist           0.390498
+dontcare          0.073786
+misc              0.493499
+pedestrian        0.257245
+person_sitting    0.573592
+tram              0.800318
+truck             0.641025
+van               0.579114
+Total             0.503638
+
+
+Final Total Loss
+================
+
+rcnn    0.474066  43 hours   2.90 steps per second
+ssd     2.778544  127 hours  1.15 steps per second
+
