@@ -72,7 +72,7 @@ class Loss(object):
 
   @abstractmethod
   def _compute_loss(self, prediction_tensor, target_tensor, **params):
-    """Method to be overriden by implementations.
+    """Method to be overritiden by implementations.
 
     Args:
       prediction_tensor: a tensor representing predicted quantities
