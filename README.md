@@ -1,11 +1,11 @@
 Goal: Glue between tensorflow objection detection models and kitti-2d object detection data
-Status: sort of works
+Status: probably won't work out of the box but will save you time vs googling all over
 
 - scripts to fetch convert the kitti 2D objection detection data to TFRecords
 - all my code is in the `object_detection/` directory
 - more on how stuff works can be found at
 
-### Dependencies:
+### Incomplete List of Dependencies:
 
     - Download pretrained faster-rcnn https://medium.com/r/?url=http%3A%2F%2Fdownload.tensorflow.org%2Fmodels%2Fobject_detection%2Ffaster_rcnn_inception_resnet_v2_atrous_coco_11_06_2017.tar.gz
     - tensorflow
@@ -14,7 +14,9 @@ Status: sort of works
 
 
 ### Instructions after cloning
+
 ```
+cd object_detection
 ./fetch_kitti.sh  # uncomment python create_dataset.py, or run separately if you get into trouble
 ./train_rcnn.sh
 # open a separate shell and run
@@ -52,39 +54,25 @@ PASCAL and require the intersection-over-union of bounding boxes to be
 larger than 50% for an object to be detected correctly.
 
 
-Train Results
-=============
 
-PerformanceByCategory/mAP@0.5IOU/car               0.937117
-PerformanceByCategory/mAP@0.5IOU/cyclist           0.828984
-PerformanceByCategory/mAP@0.5IOU/dontcare          0.364170
-PerformanceByCategory/mAP@0.5IOU/misc              0.800000
-PerformanceByCategory/mAP@0.5IOU/pedestrian        0.766581
-PerformanceByCategory/mAP@0.5IOU/person_sitting    0.875000
-PerformanceByCategory/mAP@0.5IOU/tram              1.000000
-PerformanceByCategory/mAP@0.5IOU/truck             0.914141
-PerformanceByCategory/mAP@0.5IOU/van               0.878044
-Precision/mAP@0.5IOU                               0.818226
-
-Valid Results (794 valid images)
-================================
-
-PerformanceByCategory/mAP@0.5IOU/car               0.959948
-PerformanceByCategory/mAP@0.5IOU/cyclist           0.846211
-PerformanceByCategory/mAP@0.5IOU/dontcare          0.339320
-PerformanceByCategory/mAP@0.5IOU/misc              0.844625
-PerformanceByCategory/mAP@0.5IOU/pedestrian        0.792805
-PerformanceByCategory/mAP@0.5IOU/person_sitting    0.670089
-PerformanceByCategory/mAP@0.5IOU/tram              0.940657
-PerformanceByCategory/mAP@0.5IOU/truck             0.943405
-PerformanceByCategory/mAP@0.5IOU/van               0.936856
-Precision/mAP@0.5IOU                               0.808213
+Validation Results (794 valid images, 6900 train images)
+========================================================
+Category          mAP@0.5IOU
+car               0.959948
+cyclist           0.846211
+dontcare          0.339320
+misc              0.844625
+pedestrian        0.792805
+person_sitting    0.670089
+tram              0.940657
+truck             0.943405
+van               0.936856
+Total             0.808213
 
 
 SSD Mobilenet Valid Results
 ===========================
 Category          mAP@0.5IOU
-
 car               0.723661
 cyclist           0.390498
 dontcare          0.073786
