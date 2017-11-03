@@ -1,20 +1,31 @@
 Goal: Glue between tensorflow objection detection models and kitti-2d object detection data
 Status: sort of works
 
-- addition of config files to 
-- scripts to fetchconvert the kitti 2D objection detection data to a tf friendly format
+- scripts to fetch convert the kitti 2D objection detection data to TFRecords
 - all my code is in the `object_detection/` directory
+- more on how stuff works can be found at
 
-### Instructions
+### Dependencies:
 
-- clone this
-- cd into it
-- `git clone git@github.com:umautobots/vod-converter.git`
-    - if you are using python 2.7, `git clone git@github.com:nghiattran/vod-converter.git`
-- `./fetch_kitti.sh` to pull down the kitti data and make `kitti_data` (takes a while!)
-- `./make_tf_records.sh` to get into tensorflow format
-- `./train_and_freeze.sh` to train ssd_mobilenet_1 on the data and free the inference graph.
-- then use the kitti-inference notebook to inspect performance
+    - Download pretrained faster-rcnn https://medium.com/r/?url=http%3A%2F%2Fdownload.tensorflow.org%2Fmodels%2Fobject_detection%2Ffaster_rcnn_inception_resnet_v2_atrous_coco_11_06_2017.tar.gz
+    - tensorflow
+    - a GPU
+    - have not tested on anything besides Ubuntu 16.05
+
+
+### Instructions after cloning
+```
+./fetch_kitti.sh  # uncomment python create_dataset.py, or run separately if you get into trouble
+./train_rcnn.sh
+# open a separate shell and run
+./eval.sh rcnn_logs samples/configs/faster_rcnn_inception_resnet_v2_atrous_kitti.config# open yet a third shell and run
+tensorboard --logdir rcnn_logs
+# go to sleep...in the morning,
+./freeze.sh samples/configs/faster_rcnn_inception_resnet_v2_atrous_kitti.config faster_rcnn_logs/model.ckpt-431399  faster_rcnn_frozen
+jupyter notebook
+# find kitti_inference.ipynb and try to figure out what is going on
+```
+
 
 
 ### References
@@ -23,8 +34,8 @@ Status: sort of works
 - tensorflow object detection: https://github.com/tensorflow/models/tree/master/object_detection
 
 
-2D Object Detection Benchmark
-=============================
+2D Object Detection Benchmark (from KITTI)
+==========================================
 
 The goal in the 2D object detection task is to train object detectors for the
 classes 'Car', 'Pedestrian', and 'Cyclist'. The object detectors must
