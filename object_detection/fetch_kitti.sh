@@ -9,13 +9,11 @@ rm -rf kitti_data
 mkdir kitti_data
 mv training kitti_data
 mv testing kitti_data
-#python create_dataset.py
+python create_dataset.py  # makes train.txt
 #./train.sh
 #mkdir kitti_data/training
 #mkdir kitti_data/testing
-#mv data_object_image_2 kitti_data
-#mv data_object_image_2/training/label_2  kitti_data/training/label_2
-# make train.txt
+
 
 ## desired tree
 # kitti_data

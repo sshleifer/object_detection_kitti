@@ -32,12 +32,12 @@ jupyter notebook
 
 ### References
 
-- `object_detection/vod_converter` is stolen from github.com/nghiattran/vod-converter with a few modifications
+- `object_detection/vod_converter` is shamelessly stolen from github.com/nghiattran/vod-converter with a few modifications
 - tensorflow object detection: https://github.com/tensorflow/models/tree/master/object_detection
 
 
-2D Object Detection Benchmark (from KITTI)
-==========================================
+2D Object Detection Benchmark Overview (from KITTI)
+===================================================
 
 The goal in the 2D object detection task is to train object detectors for the
 classes 'Car', 'Pedestrian', and 'Cyclist'. The object detectors must
