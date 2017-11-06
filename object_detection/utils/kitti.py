@@ -6,6 +6,7 @@ from object_detection.utils.visualization_utils import visualize_boxes_and_label
 from object_detection.create_dataset import xml_to_dict
 from object_detection.kitti_constants import *
 
+
 def load_image_into_numpy_array(image):
     (im_width, im_height) = image.size
     return np.array(image.getdata()).reshape(
