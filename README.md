@@ -1,3 +1,5 @@
+***THIS PROJECT IS NO LONGER BEING MANTAINED. The Official Object Detection repo now supports kitti!***
+
 Goal: Glue between tensorflow objection detection models and kitti-2d object detection data
 Status: probably won't work out of the box but will save you time vs googling all over
 
