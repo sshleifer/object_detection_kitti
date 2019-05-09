@@ -1,5 +1,8 @@
-***THIS PROJECT IS NO LONGER BEING MANTAINED. The Official Object Detection repo now supports kitti!***
+Read this first: 
+https://medium.com/@sshleifer/how-to-finetune-tensorflows-object-detection-models-on-kitti-self-driving-dataset-c8fcfe3258e9
 
+
+***THIS PROJECT IS NO LONGER BEING MANTAINED. The Official Object Detection repo now supports kitti!***
 Goal: Glue between tensorflow objection detection models and kitti-2d object detection data
 Status: probably won't work out of the box but will save you time vs googling all over
 
