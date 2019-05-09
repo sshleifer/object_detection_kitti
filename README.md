@@ -58,7 +58,7 @@ due to their similarity in appearance. As evaluation criterion we follow
 PASCAL and require the intersection-over-union of bounding boxes to be
 larger than 50% for an object to be detected correctly.
 
-
+```
 
 Validation Results (794 valid images, 6900 train images)
 ========================================================
@@ -95,4 +95,4 @@ Final Total Loss
 
 rcnn    0.474066  43 hours   2.90 steps per second
 ssd     2.778544  127 hours  1.15 steps per second
-
+```
