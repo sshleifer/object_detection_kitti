@@ -61,6 +61,8 @@ larger than 50% for an object to be detected correctly.
 ```
 
 Validation Results (794 valid images, 6900 train images)
+
+Faster-RCNN
 ========================================================
 Category          mAP@0.5IOU
 car               0.959948
@@ -75,7 +77,7 @@ van               0.936856
 Total             0.808213
 
 
-SSD Mobilenet Valid Results
+SSD Mobilenet
 ===========================
 Category          mAP@0.5IOU
 car               0.723661
